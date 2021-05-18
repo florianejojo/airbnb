@@ -32,6 +32,8 @@ export default function SignUpScreen({ setToken }) {
     const [password2, setPassword2] = useState("");
     // const [hide, setHide] = useState(false);
 
+    console.log("ici");
+
     const handleSubmit = async () => {
         if (!email || !userName || !description || !password) {
             console.log(email, userName, description, password, password2);
@@ -45,18 +47,19 @@ export default function SignUpScreen({ setToken }) {
                     "https://express-airbnb-api.herokuapp.com/user/sign_up",
                     {
                         email,
-                        username,
+                        username: userName,
                         description,
                         password,
                     }
                 );
+                console.log("rep", response.data);
                 const userToken = response.data.token;
                 setToken(userToken);
                 alert(userToken);
-                console.log(userToken);
+                // console.log(userToken);
                 // setHide(false);
             } catch (error) {
-                alert("user already exists");
+                alert("User already exists");
             }
         }
     };
