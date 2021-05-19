@@ -43,11 +43,11 @@ export default function SignInScreen({ setToken }) {
                 );
                 alert("ok");
                 // setHide(false);
+                const userToken = response.data.token;
+                setToken(userToken);
             } catch (error) {
                 alert("Wrong email or Password");
             }
-            const userToken = response.data.token;
-            setToken(userToken);
         }
     };
 

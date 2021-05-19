@@ -32,8 +32,6 @@ export default function SignUpScreen({ setToken }) {
     const [password2, setPassword2] = useState("");
     // const [hide, setHide] = useState(false);
 
-    console.log("ici");
-
     const handleSubmit = async () => {
         if (!email || !userName || !description || !password) {
             console.log(email, userName, description, password, password2);
@@ -42,7 +40,6 @@ export default function SignUpScreen({ setToken }) {
             alert("Passwords don't match");
         } else {
             try {
-                console.log("coucou");
                 const response = await axios.post(
                     "https://express-airbnb-api.herokuapp.com/user/sign_up",
                     {
@@ -56,10 +53,9 @@ export default function SignUpScreen({ setToken }) {
                 const userToken = response.data.token;
                 setToken(userToken);
                 alert(userToken);
-                // console.log(userToken);
-                // setHide(false);
             } catch (error) {
-                alert("User already exists");
+                console.log(error.response.data);
+                alert(error.response.data.error);
             }
         }
     };
