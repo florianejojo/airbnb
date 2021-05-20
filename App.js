@@ -10,6 +10,8 @@ import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
 import RoomScreen from "./containers/RoomScreen";
+import AroundMeScreen from "./containers/AroundMeScreen";
+import { FontAwesome } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -98,6 +100,10 @@ export default function App() {
                                             >
                                                 {() => <HomeScreen />}
                                             </Stack.Screen>
+                                            <Stack.Screen
+                                                name="Rooms"
+                                                component={RoomScreen}
+                                            />
 
                                             <Stack.Screen
                                                 name="Profile"
@@ -110,6 +116,9 @@ export default function App() {
                                         </Stack.Navigator>
                                     )}
                                 </Tab.Screen>
+
+                                {/* TAB SCREEN --------> SETTINGS */}
+
                                 <Tab.Screen
                                     name="Settings"
                                     options={{
@@ -141,10 +150,34 @@ export default function App() {
                                         </Stack.Navigator>
                                     )}
                                 </Tab.Screen>
+
+                                {/* TAB SCREEN --------> AROUND ME  */}
+
+                                <Tab.Screen
+                                    name="AroundMe"
+                                    options={{
+                                        tabBarLabel: "Around me",
+                                        tabBarIcon: ({ color, size }) => (
+                                            <FontAwesome
+                                                name="map-marker"
+                                                size={24}
+                                                color="black"
+                                            />
+                                        ),
+                                    }}
+                                >
+                                    {() => (
+                                        <Stack.Navigator>
+                                            <Stack.Screen
+                                                name="AroundMe"
+                                                component={AroundMeScreen}
+                                            />
+                                        </Stack.Navigator>
+                                    )}
+                                </Tab.Screen>
                             </Tab.Navigator>
                         )}
                     </Stack.Screen>
-                    <Stack.Screen name="Rooms" component={RoomScreen} />
                 </Stack.Navigator>
             )}
         </NavigationContainer>

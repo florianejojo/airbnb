@@ -13,6 +13,8 @@ import {
     SafeAreaView,
 } from "react-native";
 
+import { AntDesign } from "@expo/vector-icons";
+
 import { useNavigation } from "@react-navigation/core";
 
 import colors from "../assets/colors";
@@ -22,11 +24,14 @@ import axios from "axios";
 import * as React from "react";
 import MapView, { Marker } from "react-native-maps";
 
+import { SwiperFlatList } from "react-native-swiper-flatlist";
+
 const RoomScreen = ({ route }) => {
     const navigation = useNavigation();
 
     const [data, setData] = useState();
     const [isLoading, setIsLoading] = useState(true);
+    const [nbLines, setNbLines] = useState(3);
 
     useEffect(() => {
         const fetchdata = async () => {
@@ -35,7 +40,7 @@ const RoomScreen = ({ route }) => {
                     `https://express-airbnb-api.herokuapp.com/rooms/${route.params.itemId}`
                 );
                 setData(response.data);
-                // console.log(response.data.location[1]);
+                console.log(response.data.photos);
                 setIsLoading(false);
             } catch (error) {
                 alert(error.response.data.error);
@@ -43,6 +48,18 @@ const RoomScreen = ({ route }) => {
         };
         fetchdata();
     }, []);
+
+    const displayStars = (nb) => {
+        const tab = [];
+        while (nb) {
+            tab.push(<AntDesign name="star" size={24} color="orange" />);
+            nb--;
+        }
+        while (tab.length < 5) {
+            tab.push(<AntDesign name="star" size={24} color="grey" />);
+        }
+        return tab;
+    };
 
     return isLoading ? (
         <ActivityIndicator
@@ -57,24 +74,31 @@ const RoomScreen = ({ route }) => {
                 contentContainerStyle={styles.scrollViewContent}
             >
                 <View style={styles.view}>
-                    <View style={styles.homePictures}>
-                        <Image
-                            source={{
-                                uri: data.photos[0].url,
-                            }}
-                            style={styles.roomsPictures}
+                    <View style={styles.flatList}>
+                        <SwiperFlatList
+                            showPagination
+                            data={data.photos}
+                            renderItem={({ item }) => (
+                                <View style={styles.roomsPictures}>
+                                    <Image
+                                        source={{
+                                            uri: item.url,
+                                        }}
+                                        style={styles.roomsPictures}
+                                    />
+                                    <Text style={styles.pricePictures}>
+                                        {data.price} €
+                                    </Text>
+                                </View>
+                            )}
                         />
-
-                        <Text style={styles.pricePictures}>{data.price} €</Text>
                     </View>
+
                     <View style={styles.bottomView}>
                         <View>
                             <Text>{data.title}</Text>
-
-                            <Text>
-                                Etoiles: {data.ratingValue} / 5 | {data.reviews}{" "}
-                                reviews
-                            </Text>
+                            <Text> {displayStars(data.ratingValue)}</Text>
+                            <Text>| {data.reviews} reviews</Text>
                         </View>
                         <Image
                             source={{
@@ -83,7 +107,15 @@ const RoomScreen = ({ route }) => {
                             style={styles.userPicture}
                         />
                     </View>
-                    <Text style={styles.description}>{data.description} </Text>
+                    <Text
+                        style={styles.description}
+                        numberOfLines={nbLines ? 3 : nbLines}
+                        onPress={() => {
+                            setNbLines(nbLines === 3 ? 0 : 3);
+                        }}
+                    >
+                        {data.description}
+                    </Text>
 
                     <MapView
                         style={styles.map}
@@ -130,9 +162,9 @@ const styles = StyleSheet.create({
     activityIndicator: {
         margin: "50%",
     },
-    homePictures: {
-        // paddingVertical: 10,
-        // paddingHorizontal: 20,
+    flatList: {
+        width: Dimensions.get("window").width - 40,
+        height: 200,
     },
     bottomView: {
         flexDirection: "row",
@@ -140,7 +172,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     roomsPictures: {
-        width: "100%",
+        width: Dimensions.get("window").width - 40,
         height: 200,
         position: "relative",
     },
