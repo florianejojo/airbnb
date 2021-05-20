@@ -112,7 +112,6 @@ const styles = StyleSheet.create({
     activityIndicator: {
         margin: "50%",
     },
-
     homePictures: {
         paddingVertical: 10,
         paddingHorizontal: 20,
@@ -140,7 +139,6 @@ const styles = StyleSheet.create({
         bottom: 30,
         left: 20,
     },
-
     userPicture: {
         width: 50,
         height: 50,
